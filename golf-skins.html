@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skins — La Cañada Flintridge CC</title>
+<style>
+  :root{
+    --green:#15603a; --green2:#1d7a4a; --sand:#f4f1e8; --line:#d8d2c2;
+    --ink:#1d2419; --accent:#c8932a; --red:#b23b3b; --gray:#6b7263;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--sand);color:var(--ink);font-size:14px}
+  header{background:var(--green);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  header h1{font-size:18px;margin:0;font-weight:700}
+  header .sub{font-size:12px;opacity:.85}
+  .wrap{max-width:1200px;margin:0 auto;padding:16px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+  .card h2{margin:0 0 12px;font-size:15px;color:var(--green);text-transform:uppercase;letter-spacing:.04em}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+  label{display:block;font-size:11px;color:var(--gray);margin-bottom:3px;text-transform:uppercase;letter-spacing:.03em}
+  input,select{padding:7px 9px;border:1px solid var(--line);border-radius:6px;font-size:14px;background:#fff;color:var(--ink)}
+  input[type=number]{width:70px}
+  button{cursor:pointer;border:none;border-radius:6px;padding:8px 14px;font-size:13px;font-weight:600;background:var(--green);color:#fff}
+  button.sec{background:#fff;color:var(--green);border:1px solid var(--green)}
+  button.del{background:transparent;color:var(--red);padding:4px 8px;font-weight:700}
+  button:hover{opacity:.9}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{border:1px solid var(--line);padding:5px 6px;text-align:center}
+  th{background:var(--green);color:#fff;font-weight:600;font-size:11px}
+  td.name{text-align:left;white-space:nowrap;font-weight:600}
+  .muted{color:var(--gray)}
+  .scoregrid input{width:42px;text-align:center;padding:5px 2px}
+  .scoregrid td.hasstk{background:#eef6f0}
+  .stk{height:10px;line-height:10px;color:var(--red);font-size:13px;letter-spacing:1px;font-weight:700}
+  .pill{display:inline-block;background:var(--sand);border:1px solid var(--line);border-radius:20px;padding:2px 9px;font-size:12px;margin:2px}
+  .skinwin{background:#e7f3ec;font-weight:700;color:var(--green2)}
+  .carry{background:#fbf3df;color:var(--accent);font-weight:600}
+  .flag{background:var(--green);color:#fff;border-radius:4px;padding:1px 5px;font-size:10px}
+  .options{display:flex;gap:18px;flex-wrap:wrap}
+  .opt{display:flex;flex-direction:column}
+  .tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+  .tab{background:#fff;border:1px solid var(--green);color:var(--green);padding:7px 14px;border-radius:20px;font-weight:600;cursor:pointer;font-size:13px}
+  .tab.active{background:var(--green);color:#fff}
+  .scroll{overflow-x:auto}
+  .small{font-size:12px}
+  .results-card{background:#fff}
+  .winner-line{padding:6px 0;border-bottom:1px dashed var(--line);display:flex;justify-content:space-between;gap:10px}
+  .winner-line:last-child{border-bottom:none}
+  .badge{background:var(--accent);color:#fff;border-radius:5px;padding:2px 7px;font-size:11px;font-weight:700}
+  .ch{font-size:11px;color:var(--gray)}
+  details summary{cursor:pointer;font-weight:600;color:var(--green);margin-bottom:8px}
+  .legend{font-size:11px;color:var(--gray);margin-top:8px}
+  .legend b{color:var(--ink)}
+  /* segmented toggle */
+  .seg{display:flex;border:1px solid var(--green);border-radius:8px;overflow:hidden;max-width:340px}
+  .seg-btn{flex:1;background:#fff;color:var(--green);border:none;border-radius:0;padding:10px;font-weight:700;font-size:14px}
+  .seg-btn.active{background:var(--green);color:#fff}
+  /* hole-by-hole entry */
+  .holehead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+  .navbtn{font-size:22px;width:54px;height:54px;border-radius:14px;flex:0 0 auto}
+  .holetitle{text-align:center;flex:1}
+  .holetitle .num{font-size:30px;font-weight:800;color:var(--green);line-height:1}
+  .holetitle .meta{font-size:13px;color:var(--gray);margin-top:2px}
+  .pcard{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:#fff}
+  .pcard .pinfo{flex:1;min-width:0}
+  .pcard .pname{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pcard .psub{font-size:12px;color:var(--gray)}
+  .pcard .pstroke{color:var(--red);font-weight:800;letter-spacing:2px}
+  .stepper{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+  .stepbtn{width:48px;height:48px;border-radius:12px;font-size:26px;font-weight:800;line-height:1;padding:0}
+  .stepbtn.minus{background:#fff;color:var(--green);border:1px solid var(--green)}
+  .scoreval{width:58px;height:52px;font-size:24px;text-align:center;font-weight:800;border:1px solid var(--line);border-radius:12px;color:var(--ink)}
+  .holegrid{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+  .holechip{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;background:#fff;color:var(--gray);cursor:pointer}
+  .holechip.cur{background:var(--green);color:#fff;border-color:var(--green)}
+  .holechip.done{background:#e7f3ec;color:var(--green2);border-color:#bfe0cd}
+  .fselect{width:100%;padding:12px;font-size:16px;border-radius:10px;margin-bottom:12px}
+  @media(max-width:600px){.wrap{padding:8px}.card{padding:10px}.seg{max-width:none}}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>⛳ Skins Game</h1>
+    <div class="sub">La Cañada Flintridge Country Club · Par 70 · Golf-Genius style</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="tabs">
+    <div class="tab active" data-tab="setup">1 · Players &amp; Flights</div>
+    <div class="tab" data-tab="scores">2 · Enter Scores</div>
+    <div class="tab" data-tab="results">3 · Skins Results</div>
+    <div class="tab" data-tab="leaderboard">4 · Leaderboards</div>
+    <div class="tab" data-tab="course">Course Card</div>
+  </div>
+
+  <!-- ============ SETUP ============ -->
+  <section id="setup">
+    <div class="card">
+      <h2>Saved Rounds (Database)</h2>
+      <div class="row">
+        <div><label>Round name</label><input id="dbName" placeholder="e.g. 2026-06-02 Member Skins"></div>
+        <button id="dbSave">💾 Save round</button>
+        <div><label>Load a saved round</label>
+          <select id="dbList"><option value="">— select —</option></select></div>
+        <button class="sec" id="dbLoad">Load</button>
+        <button class="del" id="dbDelete">Delete</button>
+        <span id="dbStatus" class="small muted"></span>
+      </div>
+      <p class="legend">Rounds (players, scores, options, course card) are stored in this browser's local database and auto-saved as you work. Use a name to keep multiple events.</p>
+    </div>
+
+    <div class="card">
+      <h2>Game Options</h2>
+      <div class="options">
+        <div class="opt">
+          <label>Skins format</label>
+          <select id="optFormat">
+            <option value="individual">Net individual (each golfer)</option>
+            <option value="bestball">Net best ball (by group)</option>
+            <option value="gross">Gross best ball (no strokes)</option>
+          </select>
+        </div>
+        <div class="opt">
+          <label>Handicap strokes</label>
+          <select id="optStrokes">
+            <option value="full">Full course handicap</option>
+            <option value="low">Relative to lowest index (low = scratch)</option>
+          </select>
+        </div>
+        <div class="opt">
+          <label>Tee</label>
+          <select id="optTee"></select>
+        </div>
+        <div class="opt">
+          <label>Carryover ties</label>
+          <select id="optCarry">
+            <option value="yes">Yes — ties carry to next hole</option>
+            <option value="no">No — tie = no skin</option>
+          </select>
+        </div>
+        <div class="opt">
+          <label>Skins value ($/hole)</label>
+          <input type="number" id="optValue" value="5" min="0" step="1">
+        </div>
+        <div class="opt">
+          <label>Strokes on par 3s</label>
+          <select id="optPar3">
+            <option value="yes">Give strokes on par 3s</option>
+            <option value="no">No strokes on par 3s</option>
+          </select>
+        </div>
+        <div class="opt">
+          <label>Skins pool scope</label>
+          <select id="optScope">
+            <option value="flight">Per flight (separate pools)</option>
+            <option value="all">Whole field (one pool)</option>
+          </select>
+        </div>
+      </div>
+      <p class="legend">Lowest-index option makes the lowest-index player in each pool play to scratch; everyone else gets strokes equal to the difference in their <b>course handicap</b>. Strokes fall on the hardest holes first per the course stroke index.</p>
+    </div>
+
+    <div class="card">
+      <h2>Add Player</h2>
+      <div class="row">
+        <div><label>Name</label><input id="pName" placeholder="e.g. Alex V."></div>
+        <div><label>Index</label><input type="number" id="pIndex" step="0.1" value="12.0"></div>
+        <div><label>Flight</label><input id="pFlight" value="A" style="width:60px"></div>
+        <div><label>Group (foursome)</label><input id="pGroup" value="1" style="width:80px"></div>
+        <div><label>Pair (team)</label><input id="pPair" value="1" style="width:70px"></div>
+        <button id="addBtn">+ Add player</button>
+        <button class="sec" id="seedBtn">Load sample foursomes</button>
+      </div>
+      <p class="legend"><b>Group</b> = the foursome that plays and enters scores together. <b>Pair</b> = the best-ball team (partners). <b>Flight</b> = who competes for the same skins purse. A group of 4 typically holds two pairs.</p>
+    </div>
+
+    <div class="card">
+      <h2>Roster <span class="small muted">— edit any field inline</span></h2>
+      <div class="scroll">
+        <table id="rosterTable">
+          <thead><tr>
+            <th>Name</th><th>Index</th><th>Course HCP</th><th>Skins strokes</th><th>Flight</th><th>Group<br><span class="small">(foursome)</span></th><th>Pair<br><span class="small">(team)</span></th><th></th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="legend" id="rosterNote"></p>
+    </div>
+  </section>
+
+  <!-- ============ SCORES ============ -->
+  <section id="scores" style="display:none">
+    <div class="card">
+      <h2>Enter Scores</h2>
+      <div class="seg">
+        <button id="modeHole" class="seg-btn active">📱 Hole-by-hole</button>
+        <button id="modeGrid" class="seg-btn">▦ Full grid</button>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button id="parFillBtn" class="sec">Fill blanks with par</button>
+        <button id="clearScoresBtn" class="sec">Clear all scores</button>
+      </div>
+    </div>
+    <div id="scoreHost"></div>
+  </section>
+
+  <!-- ============ RESULTS ============ -->
+  <section id="results" style="display:none">
+    <div class="card">
+      <h2>Skins by Hole</h2>
+      <div class="scroll"><table id="skinTable"></table></div>
+      <p class="legend"><span class="skinwin">&nbsp;won&nbsp;</span> = skin awarded · <span class="carry">&nbsp;carry&nbsp;</span> = tie, pushed forward</p>
+    </div>
+    <div class="card results-card">
+      <h2>Payout Summary</h2>
+      <div id="payout"></div>
+    </div>
+  </section>
+
+  <!-- ============ LEADERBOARD ============ -->
+  <section id="leaderboard" style="display:none">
+    <div class="card">
+      <h2>Individual Net Leaderboard</h2>
+      <div class="scroll"><table id="lbIndiv"></table></div>
+      <p class="legend">Net = gross − handicap strokes (full course handicap, par-3 rule applied). <b>Thru</b> = holes posted.</p>
+    </div>
+    <div class="card">
+      <h2>Pairings Net Leaderboard (Best Ball)</h2>
+      <div class="scroll"><table id="lbPair"></table></div>
+      <p class="legend">Each pair's best net ball is taken on every hole and summed.</p>
+    </div>
+  </section>
+
+  <!-- ============ COURSE ============ -->
+  <section id="course" style="display:none">
+    <div class="card">
+      <h2>La Cañada Flintridge CC — Editable Card (Men's)</h2>
+      <div class="scroll"><table id="courseTable"></table></div>
+      <p class="legend">Par total: <b id="parTotal"></b>. Edit any cell to match your event; results recalculate automatically.</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ---------- Course data: La Cañada Flintridge CC (men's) ---------- */
+const HOLES = 18;
+const course = {
+  par:  [3,4,4,4,4,5,3,4,3, 4,3,5,4,4,4,3,5,4],
+  hcp:  [11,1,15,13,5,3,7,9,17, 8,14,10,2,6,12,18,16,4],
+  yard: [171,418,333,295,368,546,191,347,121, 445,147,462,401,328,280,145,430,345],
+};
+const tees = {
+  Blue:  {rating:68.8, slope:124},
+  White: {rating:67.6, slope:121},
+  Gold:  {rating:65.2, slope:114},
+};
+
+let players = []; // {id,name,index,flight,group,scores:[]}
+let pid = 1;
+
+/* ---------- Helpers ---------- */
+const $ = s => document.querySelector(s);
+const parTotal = () => course.par.reduce((a,b)=>a+b,0);
+
+function tee(){ return tees[$('#optTee').value]; }
+
+function courseHandicap(index){
+  const t = tee();
+  return Math.round(index * t.slope/113 + (t.rating - parTotal()));
+}
+
+// strokes a player receives on each hole given a stroke allocation (a course-handicap number)
+function strokeMap(ch){
+  const arr = new Array(HOLES).fill(0);
+  if(ch<=0) return arr;
+  const noPar3 = $('#optPar3') && $('#optPar3').value==='no';
+  for(let s=0;s<ch;s++){
+    const rank=(s%18)+1;                    // 1=hardest
+    const hole=course.hcp.indexOf(rank);
+    if(hole>=0) arr[hole]++;
+  }
+  if(noPar3) for(let h=0;h<HOLES;h++) if(course.par[h]===3) arr[h]=0;
+  return arr;
+}
+
+// returns the course-handicap value used for SKINS strokes, honoring full vs lowest-index option, within a pool
+function skinsCH(p, poolPlayers){
+  const ch = courseHandicap(p.index);
+  if($('#optFormat').value==='gross') return 0;
+  if($('#optStrokes').value==='full') return ch;
+  // lowest-index relative
+  const lowCH = Math.min(...poolPlayers.map(q=>courseHandicap(q.index)));
+  return Math.max(0, ch - lowCH);
+}
+
+/* ---------- Pools ---------- */
+// A "pool" is the set of competitors for a single skins purse.
+function pools(){
+  const scope=$('#optScope').value;
+  if(scope==='all') return [{key:'Field', players:players.slice()}];
+  const map={};
+  players.forEach(p=>{ (map[p.flight]=map[p.flight]||[]).push(p); });
+  return Object.keys(map).sort().map(k=>({key:'Flight '+k, players:map[k]}));
+}
+
+/* ---------- Net score per hole for a competing ENTITY ---------- */
+// entity = individual player, OR a group (best ball)
+function entities(poolPlayers){
+  const fmt=$('#optFormat').value;
+  if(fmt==='individual' || fmt==='gross' && false){
+    return poolPlayers.map(p=>({label:p.name, members:[p]}));
+  }
+  if(fmt==='gross'){
+    // gross best ball still groups; if everyone solo it's individual gross
+    return groupEntities(poolPlayers);
+  }
+  if(fmt==='bestball') return groupEntities(poolPlayers);
+  return poolPlayers.map(p=>({label:p.name, members:[p]}));
+}
+function groupEntities(poolPlayers){
+  const map={};
+  poolPlayers.forEach(p=>{ (map[p.pair]=map[p.pair]||[]).push(p); });
+  return Object.keys(map).sort().map(g=>({
+    label:'Pair '+g+' ('+map[g].map(x=>x.name.split(' ')[0]).join('/')+')',
+    members:map[g]
+  }));
+}
+
+// net score of an entity on a hole (lowest net among members for best ball)
+function entityHole(ent, hole, poolPlayers){
+  const fmt=$('#optFormat').value;
+  let best=Infinity;
+  ent.members.forEach(p=>{
+    const g=p.scores[hole];
+    if(g==null||g==='') return;
+    let v;
+    if(fmt==='gross') v=g;
+    else v=g - strokeMap(skinsCH(p,poolPlayers))[hole];
+    if(v<best) best=v;
+  });
+  return best===Infinity?null:best;
+}
+
+/* ---------- Compute skins for a pool ---------- */
+function computePool(pool){
+  const ents=entities(pool.players);
+  const carryOn=$('#optCarry').value==='yes';
+  const val=parseFloat($('#optValue').value)||0;
+  const perHole=[]; let carry=0;
+  for(let h=0;h<HOLES;h++){
+    const scored=ents.map(e=>({e,v:entityHole(e,h,pool.players)})).filter(x=>x.v!=null);
+    let res={hole:h,winner:null,score:null,skins:0,carry:false,value:0};
+    if(scored.length>=2){
+      const min=Math.min(...scored.map(x=>x.v));
+      const winners=scored.filter(x=>x.v===min);
+      if(winners.length===1){
+        res.winner=winners[0].e.label; res.score=min;
+        res.skins=1+(carryOn?carry:0);
+        res.value=res.skins*val; carry=0;
+      } else {
+        res.carry=true; res.score=min;
+        if(carryOn) carry++; else carry=0;
+      }
+    } else { // not enough scores
+      if(carryOn) {/* keep carry */}
+    }
+    perHole.push(res);
+  }
+  // tally
+  const tally={};
+  perHole.forEach(r=>{ if(r.winner){ tally[r.winner]=(tally[r.winner]||0); tally[r.winner]+=r.skins; }});
+  return {ents,perHole,tally,val,leftover:carry};
+}
+
+/* ---------- Rendering ---------- */
+function renderTees(){
+  const sel=$('#optTee'); sel.innerHTML='';
+  Object.keys(tees).forEach(t=>{
+    const o=document.createElement('option');o.value=t;o.textContent=t+' ('+tees[t].rating+'/'+tees[t].slope+')';sel.appendChild(o);
+  });
+  sel.value='White';
+}
+
+function renderRoster(){
+  const tb=$('#rosterTable tbody'); tb.innerHTML='';
+  const poolByPlayer={};
+  pools().forEach(pl=>pl.players.forEach(p=>poolByPlayer[p.id]=pl.players));
+  players.forEach(p=>{
+    const ch=courseHandicap(p.index);
+    const sk=skinsCH(p, poolByPlayer[p.id]||players);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="name"><input data-f="name" data-id="${p.id}" value="${p.name.replace(/"/g,'&quot;')}" style="width:120px"></td>
+      <td><input type="number" step="0.1" data-f="index" data-id="${p.id}" value="${p.index}" style="width:64px"></td>
+      <td>${ch}</td>
+      <td><b>${sk}</b></td>
+      <td><input data-f="flight" data-id="${p.id}" value="${p.flight}" style="width:46px"></td>
+      <td><input data-f="group" data-id="${p.id}" value="${p.group}" style="width:52px"></td>
+      <td><input data-f="pair" data-id="${p.id}" value="${p.pair}" style="width:52px"></td>
+      <td><button class="del" data-del="${p.id}">✕</button></td>`;
+    tb.appendChild(tr);
+  });
+  $('#rosterNote').innerHTML = players.length? `${players.length} players. Course handicap from <b>${$('#optTee').value}</b> tees.` : 'No players yet.';
+  tb.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{players=players.filter(x=>x.id!=b.dataset.del);refresh();});
+  tb.querySelectorAll('input[data-f]').forEach(inp=>{
+    inp.onchange=()=>{
+      const p=players.find(x=>x.id==inp.dataset.id); const f=inp.dataset.f;
+      if(f==='index') p.index=parseFloat(inp.value)||0;
+      else p[f]=inp.value.trim();
+      refreshSilently();
+    };
+  });
+}
+
+let scoreMode='hole', curFoursome=null, curHole=0;
+function foursomeGroups(){ const g={}; players.forEach(p=>{(g[p.group]=g[p.group]||[]).push(p);}); return g; }
+
+function renderScores(){
+  const host=$('#scoreHost');
+  if(!players.length){ host.innerHTML='<div class="card"><p class="muted">Add players on the Players tab first.</p></div>'; return; }
+  if(scoreMode==='hole') return renderScoresHole();
+  return renderScoresGrid();
+}
+
+function renderScoresHole(){
+  const host=$('#scoreHost');
+  const groups=foursomeGroups();
+  const gkeys=Object.keys(groups).sort();
+  if(curFoursome==null||!groups[curFoursome]) curFoursome=gkeys[0];
+  const ps=groups[curFoursome];
+  const poolByPlayer={}; pools().forEach(pl=>pl.players.forEach(p=>poolByPlayer[p.id]=pl.players));
+  const h=curHole;
+  let fsel='<select class="fselect" id="fSel">';
+  gkeys.forEach(k=>fsel+=`<option value="${k}" ${k==curFoursome?'selected':''}>Foursome ${k} — ${groups[k].map(x=>x.name).join(', ')}</option>`);
+  fsel+='</select>';
+  let html=`<div class="card">${fsel}
+    <div class="holehead">
+      <button class="navbtn sec" id="prevHole">‹</button>
+      <div class="holetitle"><div class="num">Hole ${h+1}</div>
+        <div class="meta">Par ${course.par[h]} · ${course.yard[h]} yds · Stroke Index ${course.hcp[h]}</div></div>
+      <button class="navbtn" id="nextHole">›</button>
+    </div>`;
+  ps.forEach(p=>{
+    const sm=strokeMap(skinsCH(p, poolByPlayer[p.id]||players));
+    const v=p.scores[h]; const disp=(v==null||v==='')?'':v;
+    const dots=sm[h]>0?'•'.repeat(sm[h]):'';
+    html+=`<div class="pcard">
+      <div class="pinfo">
+        <div class="pname">${p.name}</div>
+        <div class="psub">${p.flight} · Pair ${p.pair} ${dots?'· <span class="pstroke">'+dots+' stroke</span>':''}</div>
+      </div>
+      <div class="stepper">
+        <button class="stepbtn minus" data-step="-1" data-id="${p.id}">−</button>
+        <input class="scoreval" inputmode="numeric" pattern="[0-9]*" data-id="${p.id}" value="${disp}" placeholder="${course.par[h]}">
+        <button class="stepbtn" data-step="1" data-id="${p.id}">+</button>
+      </div></div>`;
+  });
+  html+='<div class="holegrid">';
+  for(let i=0;i<HOLES;i++){
+    const allIn=ps.every(p=>p.scores[i]!=null&&p.scores[i]!=='');
+    html+=`<div class="holechip ${i==h?'cur':allIn?'done':''}" data-hole="${i}">${i+1}</div>`;
+  }
+  html+='</div></div>';
+  html+='<div class="card"><h2 class="small">Foursome '+curFoursome+' totals</h2><div class="scroll"><table>';
+  html+='<thead><tr><th class="name">Player</th><th>Thru</th><th>Gross</th><th>Net</th></tr></thead><tbody>';
+  ps.forEach(p=>{ const n=playerNet(p); html+=`<tr><td class="name">${p.name}</td><td>${n.thru}</td><td>${n.gross||''}</td><td><b>${n.thru?n.net:''}</b></td></tr>`; });
+  html+='</tbody></table></div></div>';
+  host.innerHTML=html;
+  function setScore(id,val){ const p=players.find(x=>x.id==id); p.scores[h]=(val===''||val==null||isNaN(val))?null:Math.max(1,val); }
+  $('#fSel').onchange=e=>{curFoursome=e.target.value;renderScoresHole();};
+  $('#prevHole').onclick=()=>{curHole=(h+HOLES-1)%HOLES;renderScoresHole();};
+  $('#nextHole').onclick=()=>{curHole=(h+1)%HOLES;renderScoresHole();};
+  host.querySelectorAll('.holechip').forEach(c=>c.onclick=()=>{curHole=+c.dataset.hole;renderScoresHole();});
+  host.querySelectorAll('.scoreval').forEach(inp=>inp.onchange=()=>{setScore(inp.dataset.id,parseInt(inp.value));refreshSilently();renderScoresHole();});
+  host.querySelectorAll('.stepbtn').forEach(b=>b.onclick=()=>{
+    const p=players.find(x=>x.id==b.dataset.id);
+    const base=(p.scores[h]==null||p.scores[h]==='')?course.par[h]:p.scores[h];
+    setScore(b.dataset.id, base+parseInt(b.dataset.step));
+    refreshSilently(); renderScoresHole();
+  });
+}
+
+function renderScoresGrid(){
+  const host=$('#scoreHost');
+  const poolByPlayer={};
+  pools().forEach(pl=>pl.players.forEach(p=>poolByPlayer[p.id]=pl.players));
+  const groups={};
+  players.forEach(p=>{ (groups[p.group]=groups[p.group]||[]).push(p); });
+  let html='';
+  Object.keys(groups).sort().forEach(g=>{
+    const ps=groups[g];
+    html+=`<div class="card"><h2>Foursome ${g} <span class="small muted">— ${ps.map(x=>x.name).join(', ')}</span></h2><div class="scroll"><table class="scoregrid">`;
+    html+='<thead><tr><th class="name">Player</th>';
+    for(let h=0;h<HOLES;h++) html+=`<th>${h+1}<div class="ch">par ${course.par[h]} · SI ${course.hcp[h]}</div></th>`;
+    html+='<th>Out</th><th>In</th><th>Tot</th></tr></thead><tbody>';
+    ps.forEach(p=>{
+      const sm=strokeMap(skinsCH(p, poolByPlayer[p.id]||players));
+      let out=0,inn=0;
+      const totStk=sm.reduce((a,b)=>a+b,0);
+      let row=`<tr><td class="name">${p.name} <span class="muted small">(${p.flight} · ${totStk} stk)</span></td>`;
+      for(let h=0;h<HOLES;h++){
+        const v=p.scores[h]??'';
+        if(v!==''){ if(h<9)out+=v; else inn+=v; }
+        const dots=sm[h]>0?'•'.repeat(sm[h]):'';
+        row+=`<td class="${sm[h]>0?'hasstk':''}"><div class="stk">${dots}</div><input type="number" min="1" data-p="${p.id}" data-h="${h}" value="${v}"></td>`;
+      }
+      row+=`<td><b>${out||''}</b></td><td><b>${inn||''}</b></td><td><b>${(out+inn)||''}</b></td></tr>`;
+      html+=row;
+    });
+    html+='</tbody></table></div></div>';
+  });
+  host.innerHTML=html;
+  host.querySelectorAll('input').forEach(inp=>inp.oninput=()=>{
+    const p=players.find(x=>x.id==inp.dataset.p);
+    const h=+inp.dataset.h;
+    p.scores[h]= inp.value===''?null:parseInt(inp.value);
+    const cell=inp.closest('tr');
+    // live-update the Out/In/Tot for this row
+    let out=0,inn=0;
+    cell.querySelectorAll('input').forEach((x,i)=>{const val=x.value===''?0:parseInt(x.value); if(i<9)out+=val; else inn+=val;});
+    const tds=cell.querySelectorAll('td');
+    tds[tds.length-3].innerHTML=`<b>${out||''}</b>`;
+    tds[tds.length-2].innerHTML=`<b>${inn||''}</b>`;
+    tds[tds.length-1].innerHTML=`<b>${(out+inn)||''}</b>`;
+  });
+}
+
+function renderResults(){
+  const skinT=$('#skinTable'); const payoutDiv=$('#payout');
+  let head='<thead><tr><th class="name">Pool / Hole</th>';
+  for(let h=0;h<HOLES;h++) head+=`<th>${h+1}</th>`;
+  head+='<th>Σ</th></tr></thead>';
+  let body='<tbody>'; let payout='';
+  pools().forEach(pool=>{
+    const c=computePool(pool);
+    body+=`<tr><td class="name" colspan="${HOLES+2}" style="background:var(--sand);text-align:left;color:var(--green);font-weight:700">${pool.key}</td></tr>`;
+    body+=`<tr><td class="name muted">Result</td>`;
+    let totSkins=0;
+    c.perHole.forEach(r=>{
+      if(r.winner){ totSkins+=r.skins;
+        body+=`<td class="skinwin" title="${r.winner} · net ${r.score}">${r.skins}${r.skins>1?'★':''}</td>`;
+      } else if(r.carry){
+        body+=`<td class="carry" title="tie at ${r.score}">½</td>`;
+      } else body+=`<td class="muted">–</td>`;
+    });
+    body+=`<td><b>${totSkins}</b></td></tr>`;
+    // winner label row
+    body+=`<tr><td class="name muted small">Won by</td>`;
+    c.perHole.forEach(r=>{
+      body+=`<td class="small">${r.winner?r.winner.replace('Pair ','P').split(' ')[0]:''}</td>`;
+    });
+    body+=`<td></td></tr>`;
+
+    // payout block
+    payout+=`<h3 style="color:var(--green);margin:14px 0 6px">${pool.key}</h3>`;
+    const names=Object.keys(c.tally).sort((a,b)=>c.tally[b]-c.tally[a]);
+    if(!names.length){ payout+='<div class="muted small">No skins won yet.</div>'; }
+    names.forEach(n=>{
+      payout+=`<div class="winner-line"><span>${n}</span><span><span class="badge">${c.tally[n]} skin${c.tally[n]>1?'s':''}</span> &nbsp; $${(c.tally[n]*c.val).toFixed(0)}</span></div>`;
+    });
+    if(c.leftover>0) payout+=`<div class="winner-line carry"><span>Carryover unclaimed</span><span>${c.leftover} hole(s) → $${(c.leftover*c.val).toFixed(0)}</span></div>`;
+  });
+  skinT.innerHTML=head+body+'</tbody>';
+  payoutDiv.innerHTML=payout || '<div class="muted">Add players and scores.</div>';
+}
+
+/* ---------- Leaderboards ---------- */
+// full-course-handicap net stroke map for net scoring (par-3 rule applied via strokeMap)
+function netStrokes(p){ return strokeMap(courseHandicap(p.index)); }
+function playerNet(p){
+  const sm=netStrokes(p); let gross=0,net=0,thru=0;
+  for(let h=0;h<HOLES;h++){ const g=p.scores[h]; if(g==null||g==='')continue; thru++; gross+=g; net+=g-sm[h]; }
+  return {gross,net,thru};
+}
+function renderLeaderboard(){
+  // individual
+  const rows=players.map(p=>({p,...playerNet(p)})).filter(r=>r.thru>0)
+    .sort((a,b)=>a.net-b.net || a.gross-b.gross);
+  let h1='<thead><tr><th>#</th><th class="name">Player</th><th>Flight</th><th>CH</th><th>Thru</th><th>Gross</th><th>Net</th></tr></thead><tbody>';
+  rows.forEach((r,i)=>{
+    h1+=`<tr><td>${i+1}</td><td class="name">${r.p.name}</td><td>${r.p.flight}</td><td>${courseHandicap(r.p.index)}</td><td>${r.thru}</td><td>${r.gross}</td><td><b>${r.net}</b></td></tr>`;
+  });
+  $('#lbIndiv').innerHTML=h1+(rows.length?'':'<tr><td colspan="7" class="muted">No scores yet.</td></tr>')+'</tbody>';
+
+  // pairings best-ball net
+  const pmap={};
+  players.forEach(p=>{ (pmap[p.pair]=pmap[p.pair]||[]).push(p); });
+  const prows=Object.keys(pmap).map(k=>{
+    const mem=pmap[k]; let net=0,thru=0;
+    for(let h=0;h<HOLES;h++){
+      let best=Infinity;
+      mem.forEach(p=>{const g=p.scores[h]; if(g==null||g==='')return; const v=g-netStrokes(p)[h]; if(v<best)best=v;});
+      if(best!==Infinity){ net+=best; thru++; }
+    }
+    return {pair:k,label:mem.map(x=>x.name.split(' ')[0]).join(' / '),flight:mem[0].flight,net,thru};
+  }).filter(r=>r.thru>0).sort((a,b)=>a.net-b.net);
+  let h2='<thead><tr><th>#</th><th class="name">Pair</th><th>Flight</th><th>Holes</th><th>Best-Ball Net</th></tr></thead><tbody>';
+  prows.forEach((r,i)=>{
+    h2+=`<tr><td>${i+1}</td><td class="name">Pair ${r.pair} — ${r.label}</td><td>${r.flight}</td><td>${r.thru}</td><td><b>${r.net}</b></td></tr>`;
+  });
+  $('#lbPair').innerHTML=h2+(prows.length?'':'<tr><td colspan="5" class="muted">No scores yet.</td></tr>')+'</tbody>';
+}
+
+/* ---------- Persistence (local database) ---------- */
+const DB_KEY='golfSkinsRoundsV1';
+const OPT_IDS=['optFormat','optStrokes','optTee','optCarry','optValue','optScope','optPar3'];
+function readDB(){ try{return JSON.parse(localStorage.getItem(DB_KEY))||{};}catch(e){return {};} }
+function writeDB(o){ try{localStorage.setItem(DB_KEY,JSON.stringify(o));}catch(e){} }
+function snapshot(){
+  const opts={}; OPT_IDS.forEach(id=>opts[id]=$('#'+id).value);
+  return {players,opts,course:JSON.parse(JSON.stringify(course)),pid,ts:Date.now()};
+}
+function applySnapshot(s){
+  players=s.players||[]; pid=s.pid||(players.reduce((m,p)=>Math.max(m,p.id),0)+1);
+  players.forEach(p=>{ if(!('pair'in p))p.pair=p.group; if(!p.scores)p.scores=new Array(HOLES).fill(null); });
+  if(s.course){ ['par','hcp','yard'].forEach(k=>{ if(s.course[k])course[k]=s.course[k]; }); }
+  if(s.opts) OPT_IDS.forEach(id=>{ if(s.opts[id]!=null)$('#'+id).value=s.opts[id]; });
+  renderCourse(); refresh();
+}
+function refreshDbList(sel){
+  const db=readDB(); const list=$('#dbList'); const cur=sel||list.value;
+  list.innerHTML='<option value="">— select —</option>';
+  Object.keys(db).sort().forEach(n=>{ const o=document.createElement('option');o.value=n;o.textContent=n;list.appendChild(o); });
+  if(cur && db[cur]) list.value=cur;
+}
+function autosave(){ const db=readDB(); db['(autosave)']=snapshot(); writeDB(db); }
+
+function renderCourse(){
+  const t=$('#courseTable');
+  const rows=[['Hole','par','hcp','yard']];
+  let head='<thead><tr><th class="name">Hole</th>';
+  for(let h=0;h<HOLES;h++) head+=`<th>${h+1}</th>`;
+  head+='<th>Tot</th></tr></thead>';
+  function line(lbl,key,fmt){
+    let s=`<tr><td class="name">${lbl}</td>`,tot=0;
+    for(let h=0;h<HOLES;h++){ tot+=course[key][h];
+      s+=`<td><input type="number" data-key="${key}" data-h="${h}" value="${course[key][h]}" style="width:46px"></td>`;}
+    s+=`<td><b>${key==='hcp'?'':tot}</b></td></tr>`;return s;
+  }
+  t.innerHTML=head+'<tbody>'+line('Par','par')+line('Stroke Idx','hcp')+line('Yards','yard')+'</tbody>';
+  t.querySelectorAll('input').forEach(inp=>inp.oninput=()=>{
+    course[inp.dataset.key][+inp.dataset.h]=parseInt(inp.value)||0; $('#parTotal').textContent=parTotal(); refreshSilently();
+  });
+  $('#parTotal').textContent=parTotal();
+}
+
+function refreshSilently(){ renderRoster(); renderResults(); renderLeaderboard(); autosave(); }
+function refresh(){ renderRoster(); renderScores(); renderResults(); renderLeaderboard(); autosave(); }
+
+/* ---------- Events ---------- */
+$('#addBtn').onclick=()=>{
+  const name=$('#pName').value.trim(); if(!name)return;
+  players.push({id:pid++,name,index:parseFloat($('#pIndex').value)||0,
+    flight:$('#pFlight').value.trim()||'A',group:$('#pGroup').value.trim()||'1',pair:$('#pPair').value.trim()||'1',scores:new Array(HOLES).fill(null)});
+  $('#pName').value=''; refresh();
+};
+$('#pName').addEventListener('keydown',e=>{if(e.key==='Enter')$('#addBtn').click();});
+
+$('#seedBtn').onclick=()=>{
+  // [name, index, flight, group(foursome), pair(team)]
+  const sample=[
+    ['Alex V.',8.2,'A','1','1'],['Sam R.',11.5,'A','1','1'],['Drew K.',6.4,'A','1','2'],['Pat L.',9.9,'A','1','2'],
+    ['Casey M.',16.1,'B','2','3'],['Jordan T.',19.7,'B','2','3'],['Riley P.',14.3,'B','2','4'],['Morgan S.',22.0,'B','2','4'],
+  ];
+  sample.forEach(([n,i,f,g,pr])=>players.push({id:pid++,name:n,index:i,flight:f,group:g,pair:pr,scores:new Array(HOLES).fill(null)}));
+  refresh();
+};
+$('#modeHole').onclick=()=>{scoreMode='hole';$('#modeHole').classList.add('active');$('#modeGrid').classList.remove('active');renderScores();};
+$('#modeGrid').onclick=()=>{scoreMode='grid';$('#modeGrid').classList.add('active');$('#modeHole').classList.remove('active');renderScores();};
+function pwOk(action){ return prompt('Enter password to '+action+':')==='0000'; }
+$('#parFillBtn').onclick=()=>{ if(!pwOk('fill blanks with par')){return;} players.forEach(p=>{for(let h=0;h<HOLES;h++) if(p.scores[h]==null)p.scores[h]=course.par[h];}); refresh(); };
+$('#clearScoresBtn').onclick=()=>{ if(!pwOk('clear all scores')){return;} players.forEach(p=>p.scores=new Array(HOLES).fill(null)); refresh(); };
+
+['optFormat','optStrokes','optTee','optCarry','optValue','optScope','optPar3'].forEach(id=>$('#'+id).addEventListener('change',refresh));
+$('#optValue').addEventListener('input',()=>{renderResults();});
+
+// Database buttons
+$('#dbSave').onclick=()=>{
+  const name=$('#dbName').value.trim(); if(!name){$('#dbStatus').textContent='Enter a round name.';return;}
+  const db=readDB(); db[name]=snapshot(); writeDB(db); refreshDbList(name);
+  $('#dbStatus').textContent='✓ Saved "'+name+'".';
+};
+$('#dbLoad').onclick=()=>{
+  const name=$('#dbList').value; if(!name){$('#dbStatus').textContent='Pick a round.';return;}
+  const db=readDB(); if(!db[name])return;
+  applySnapshot(db[name]); $('#dbName').value=name; $('#dbStatus').textContent='✓ Loaded "'+name+'".';
+};
+$('#dbDelete').onclick=()=>{
+  const name=$('#dbList').value; if(!name)return;
+  const db=readDB(); delete db[name]; writeDB(db); refreshDbList(); $('#dbStatus').textContent='Deleted "'+name+'".';
+};
+
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  ['setup','scores','results','leaderboard','course'].forEach(s=>$('#'+s).style.display='none');
+  $('#'+t.dataset.tab).style.display='block';
+  if(t.dataset.tab==='scores')renderScores();
+  if(t.dataset.tab==='results')renderResults();
+  if(t.dataset.tab==='leaderboard')renderLeaderboard();
+  if(t.dataset.tab==='course')renderCourse();
+});
+
+/* ---------- Init ---------- */
+renderTees(); renderCourse();
+(function init(){
+  const db=readDB();
+  if(db['(autosave)']){ applySnapshot(db['(autosave)']); }
+  else { refresh(); }
+  refreshDbList();
+})();
+
+/* ---------- Live shared backend sync (active only when served over http/https) ---------- */
+(function(){
+  if(!/^https?:$/.test(location.protocol)) return;   // opened as a local file → stay offline
+  const params=new URLSearchParams(location.search);
+  let code=params.get('r');
+  if(!code){ code=(prompt('Enter a round code to create or join.\nShare it (or this page link) with the other golfers:','lacanada')||'').trim()||'default';
+    history.replaceState({},'', '?r='+encodeURIComponent(code)); }
+  const base='/api/round/'+encodeURIComponent(code);
+  const J={'Content-Type':'application/json'};
+  let lastVersion=-1, applying=false, pushTimer=null;
+  const status=m=>{const e=document.getElementById('liveStatus'); if(e)e.textContent=m;};
+
+  function cfg(){ const opts={}; OPT_IDS.forEach(id=>opts[id]=$('#'+id).value);
+    return {players:players.map(p=>({id:p.id,name:p.name,index:p.index,flight:p.flight,group:p.group,pair:p.pair})),
+      opts, course:{par:course.par.slice(),hcp:course.hcp.slice(),yard:course.yard.slice()}, pid}; }
+
+  autosave=function(){ if(applying)return; clearTimeout(pushTimer);
+    pushTimer=setTimeout(()=>{ fetch(base+'/config',{method:'PUT',headers:J,body:JSON.stringify(cfg())})
+      .then(r=>r.json()).then(d=>{if(d&&d.version!=null)lastVersion=d.version;status('synced ✓');}).catch(()=>status('offline')); },500); };
+
+  function postScore(id,h,v){ fetch(base+'/score',{method:'POST',headers:J,
+      body:JSON.stringify({id:+id,h:+h,v:(v===''||v==null||isNaN(v))?null:+v})})
+      .then(r=>r.json()).then(d=>{if(d&&d.version!=null)lastVersion=d.version;}).catch(()=>{}); }
+
+  document.addEventListener('change',e=>{ if(applying)return; const t=e.target;
+    if(t.matches&&t.matches('.scoreval, .scoregrid input[data-h]')){ const id=t.dataset.id||t.dataset.p; if(id!=null)postScore(id,t.dataset.h,t.value); } },true);
+  document.addEventListener('click',e=>{ if(applying)return; const b=e.target.closest&&e.target.closest('.stepbtn'); if(!b)return;
+    setTimeout(()=>{ const id=+b.dataset.id; const p=players.find(x=>x.id===id); const h=(typeof curHole==='number')?curHole:0; if(p)postScore(id,h,p.scores[h]); },0); },true);
+  function pushBulk(){ const scores={}; players.forEach(p=>scores[p.id]=p.scores);
+    fetch(base+'/bulk',{method:'POST',headers:J,body:JSON.stringify({scores})}).then(r=>r.json()).then(d=>{if(d&&d.version!=null)lastVersion=d.version;}); }
+  ['parFillBtn','clearScoresBtn'].forEach(id=>{const el=$('#'+id); if(el)el.addEventListener('click',()=>setTimeout(pushBulk,80));});
+
+  function applyServer(s){ applying=true; try{ applySnapshot({players:s.players,opts:s.opts,course:s.course,pid:s.pid}); } finally{ setTimeout(()=>applying=false,0); } }
+  function poll(){ fetch(base).then(r=>r.json()).then(d=>{
+      if(d&&d.version!=null&&d.version!==lastVersion){ lastVersion=d.version;
+        const ae=document.activeElement; if(ae&&ae.matches&&ae.matches('.scoreval, .scoregrid input[data-h]'))return;
+        if(d.snapshot&&d.snapshot.players)applyServer(d.snapshot); status('live ●'); } })
+      .catch(()=>status('offline')).finally(()=>setTimeout(poll,4000)); }
+
+  // banner + hide the local-only Saved Rounds card
+  const dbCard=document.getElementById('dbName')&&document.getElementById('dbName').closest('.card'); if(dbCard)dbCard.style.display='none';
+  const banner=document.createElement('div'); banner.className='card';
+  banner.innerHTML='<h2>Live Shared Round</h2><div class="row" style="align-items:center;gap:12px"><div>Round code: <b>'+code+'</b></div>'+
+    '<button class="sec" id="copyLink">Copy share link</button><span id="liveStatus" class="small muted">connecting…</span></div>'+
+    '<p class="legend">Everyone who opens this page with round code <b>'+code+'</b> shares the same live scores &amp; leaderboard. Send them this link.</p>';
+  const setup=document.getElementById('setup'); setup.insertBefore(banner,setup.firstChild);
+  document.getElementById('copyLink').onclick=()=>{try{navigator.clipboard.writeText(location.href);status('link copied');}catch(e){}};
+
+  fetch(base).then(r=>r.json()).then(d=>{
+    if(d&&d.snapshot&&d.snapshot.players&&d.snapshot.players.length){ lastVersion=d.version; applyServer(d.snapshot); status('live ●'); }
+    else { fetch(base+'/config',{method:'PUT',headers:J,body:JSON.stringify(cfg())}).then(r=>r.json()).then(d=>{lastVersion=(d&&d.version)||0;status('live ●');}); }
+    poll();
+  }).catch(()=>{status('offline');poll();});
+})();
+</script>
+</body>
+</html>
